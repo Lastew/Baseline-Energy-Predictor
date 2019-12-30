@@ -12,7 +12,13 @@ from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 
 def reduce_mem_usage(df, verbose=True):
-    """Reduces the size of our dataframe."""
+    """
+    Reduces the memory usage of the original dataset.
+    Arguments:
+        df: original sized dataframe
+    Outputs:
+        Reduced memory usage dataset
+    """
     numerics = ['int16', 'int32', 'int64', 'float16', 'float32', 'float64']
     start_mem = df.memory_usage().sum() / 1024**2
     for col in df.columns:
@@ -69,7 +75,13 @@ def calculate_model_accuracy_metrics(actual, predicted):
 
 
 def split_timestamp(df):
-    """Split time_series."""
+    """
+    Split timestamp to month, day_of_month, day_of_week _series.
+    Arguments:
+        df: original sized dataframe
+    Outputs:
+        Splited timestamp dataset
+    """
     df['month'] = df['timestamp'].dt.month.astype('uint8')
     df['day_of_month'] = df['timestamp'].dt.day.astype('uint8')
     df['day_of_week'] = df['timestamp'].dt.dayofweek.astype('uint8')
@@ -88,42 +100,26 @@ def order_difference(data, col='chilledwater'):
 
 def feat_value_count(df, colname):
     """Value count of each feature
-
-    Args
-    df: data frame.
-    colname: string. Name of to be valued column
-
+    Arguments
+        df: data frame.
+        colname: string. Name of to be valued column
     Returns
-    df_count: data frame.
+        df_count: data frame.
     """
     df_count = df[colname].value_counts().to_frame().reset_index()
-    df_count = df_count.rename(columns={'index': colname+'_values', colname: 'counts'})
-    return df_count
-
-
-def feat_value_count(df, colname):
-    """Count the value of each
-    Args
-    df: data frame.
-    colname: string. Name of to be valued column
-
-    Returns
-    df_count: data frame.
-    """
-    df_count = df[colname].value_counts().to_frame().reset_index()
-    df_count = df_count.rename(columns={'index': colname+'_values', colname: 'counts'})
+    df_count = df_count.rename(columns={'index': colname+'_values',
+                                        colname: 'counts'})
     return df_count
 
 
 def check_missing(df, cols=None, axis=0):
     """Check for missing values
-    Args
-    df: data frame.
-    cols: list. List of column names
-    axis: int. 0 means column and 1 means row
-
+    Arguments
+        df: dataframe
+        cols: list. List of column names
+        axis: int. 0 means column and 1 means row
     Returns
-    missing_info: data frame.
+        missing_info: data frame
     """
     if cols != None:
         df = df[cols]
@@ -132,62 +128,15 @@ def check_missing(df, cols=None, axis=0):
     return missing_num.sort_values(by='missing_percent', ascending=False)
 
 
-def plot_comparison(start_idx, model=model,length=100, train=True, x=x_train_scaled, x=x_test_scaled, y_true=y_train, y_true=y_test):
-    """
-    Plot the predicted and true output-signals.
-    
-    :param start_idx: Start-index for the time-series.
-    :param length: Sequence-length to process and plot.
-    :param train: Boolean whether to use training- or test-set.
-    """
-    
-    if train:
-        # Use training-data.
-        x = x_train_scaled
-        y_true = y_train
-    else:
-        # Use test-data.
-        x = x_test_scaled
-        y_true = y_test
-    
-    # End-index for the sequences.
-    end_idx = start_idx + length
-    
-    # Select the sequences from the given start-index and
-    # of the given length.
-    x = x[start_idx:end_idx]
-    y_true = y_true[start_idx:end_idx]
-    
-    # Input-signals for the model.
-    x = np.expand_dims(x, axis=0)
+def extract_data(building_id, train_data=None):
+    """Extract data that is going to be used by ML model.
+    Arguments
+        building_id: duilding id number
+        train_data: dataset
+    Returns
+        ML model ready dataset
+        """
+    building_data = train_data[train_data['building_id'] == building_id].drop(['x', 'y'])
 
-    # Use the model to predict the output-signals.
-    y_pred = model.predict(x)
-    
-    # The output of the model is between 0 and 1.
-    # Do an inverse map to get it back to the scale
-    # of the original data-set.
-    y_pred_rescaled = y_scaler.inverse_transform(y_pred[0])
-    
-    # For each output-signal.
-    for signal in range(len(target_names)):
-        # Get the output-signal predicted by the model.
-        signal_pred = y_pred_rescaled[:, signal]
-        
-        # Get the true output-signal from the data-set.
-        signal_true = y_true[:, signal]
-
-        # Make the plotting-canvas bigger.
-        plt.figure(figsize=(15,5))
-        
-        # Plot and compare the two signals.
-        plt.plot(signal_true, label='true')
-        plt.plot(signal_pred, label='pred')
-        
-        # Plot grey box for warmup-period.
-        p = plt.axvspan(0, warmup_steps, facecolor='black', alpha=0.15)
-        
-        # Plot labels etc.
-        plt.ylabel(target_names[signal])
-        plt.legend()
-        plt.show()
+    building_data.ffill()
+    building_data.bfill()
