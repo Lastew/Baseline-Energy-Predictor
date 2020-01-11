@@ -1,5 +1,5 @@
 # Capestone Presentation:
-![Capestone_Presentation](data/presentation.JPG112)
+![Capestone-Presentation](image/presentation.png)
 # Abstract:
 The buildings sector accounts for about 76%* of electricity use and 40% of all U.S. primary energy use and associated greenhouse gas (GHG) emissions. Reducing the energy consumption of buildings to meet national energy and environmental challenges is crucial in the 21st century.
 
