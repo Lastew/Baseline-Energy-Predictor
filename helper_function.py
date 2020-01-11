@@ -19,13 +19,12 @@ def batch_generator(batch_size, sequence_length, num_x_signals=8, num_y_signals=
     Generator function for creating random batches of training-data.
     Arguments:
         batch_size: batch size wanted to create
-        sequence_length: length of sequence we want to shift our sequential data
-        num_x_signals: number of imput signals
+        sequence_length: length of the sequence we want to shift our sequential data
+        num_x_signals: number of input signals
         and training feature and target sets
     Returns:
         generate batched input 
     """
-    Boolean
 
     # Infinite loop.
     while True:
@@ -52,10 +51,10 @@ def batch_generator(batch_size, sequence_length, num_x_signals=8, num_y_signals=
 def calculate_errors(train=True, model=None, x_scaled_train=None, x_scaled_test=None,
                     y_train=None, y_test=None, y_scaler=None, target_names=None):
     """
-    Calculate traning errors.
+    Calculate training errors.
     Arguments:
-        train: boolean whether the input is training set and test set
-        model: training model
+        train: boolean whether the input is the training set and test set
+        model: the training model
         and training feature and target sets
     Returns:
         calculated model errors

@@ -21,7 +21,6 @@ def plot_train_vs_val_loss(history=None, a=None):
     Outputs:
         plot for traning vs validation loss
     """
-<<<<<<< HEAD
     fig = go.Figure()
     fig.add_trace(go.Scatter(y=history.history['val_loss'], name="validation Loss"))
     fig.update_layout(
@@ -33,7 +32,6 @@ def plot_train_vs_val_loss(history=None, a=None):
                      )
 
     fig.show();
-=======
     result = seasonal_decompose(series, model='additive')  # multiplicative'
     result.plot()
     pyplot.show()
@@ -176,4 +174,3 @@ def plot_comparison(start_idx, length=100, train=True, model=None,
         plt.ylabel(target_names[signal])
         plt.legend()
         plt.show()
->>>>>>> f45a00335b5df8e069812d017b229e9905a95198

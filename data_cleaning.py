@@ -58,7 +58,7 @@ def feat_value_count(df, colname):
     colname: string. Name of to be valued column
 
     Returns
-    df_count: data frame.
+    df_count: dataframe.
     """
     df_count = df[colname].value_counts().to_frame().reset_index()
     df_count = df_count.rename(columns={'index': colname+'_values', colname: 'counts'})
